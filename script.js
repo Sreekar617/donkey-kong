@@ -1,75 +1,30 @@
-const SPRITE_WIDTH = 13;
-const SPRITE_HEIGHT = 14;
-const BORDER_WIDTH = 1;
-const SPACING_WIDTH = 1;
+var tID; //we will use this variable to clear the setInterval()
 
-function spritePositionToImagePosition(row, col) {
-    return {
-        x: (
-            BORDER_WIDTH +
-            col * (SPACING_WIDTH + SPRITE_WIDTH)
-        ),
-        y: (
-            BORDER_WIDTH +
-            row * (SPACING_WIDTH + SPRITE_HEIGHT)
-        )
+function stopAnimate() {
+  clearInterval(tID);
+} //end of stopAnimate()
+
+
+function animateScript() {
+
+  var position = 256; //start position for the image slicer
+  const interval = 100; //100 ms of interval for the setInterval()
+  const diff = 256; //diff as a variable for position offset
+  
+  tID = setInterval(() => {
+  
+    document.getElementById("image").style.backgroundPosition =
+      `-${position}px 0px`;
+    //we use the ES6 template literal to insert the variable "position"
+    
+    if (position < 1536) {
+      position = position + diff;
     }
-}
-
-var canvas = document
-            .querySelector('canvas');
-var context = canvas
-              .getContext('2d');
-
-var spriteSheetURL = 'https://codehs.com/uploads/e4cfb06e001bd92cf41139928e88819a';
-var image = new Image();
-image.src = spriteSheetURL;
-image.crossOrigin = true;
-
-// extract all of our frames
-var karelright0 = spritePositionToImagePosition(0, 0);
-var karelright1 = spritePositionToImagePosition(0, 1);
-var karelright2 = spritePositionToImagePosition(0, 2);
-var karelleftt0 = spritePositionToImagePosition(1, 0);
-var karelleft1 = spritePositionToImagePosition(1, 1);
-var karelleft2 = spritePositionToImagePosition(1, 2);
-
-var walkCycle = [
-    karelright0,
-    karelright1,
-    karelright2,
-    karelright1
-];
-
-var frameIndex = 0;
-var frame;
-function animate() {
-    // once we hit the end of the cycle,
-    // start again
-    if (frameIndex === walkCycle.length) {
-        frameIndex = 0;
+    //we increment the position by 256 each time
+    else {
+      position = 256;
     }
-    frame = walkCycle[frameIndex];
-    context.clearRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
-    context.drawImage(
-        image,
-        frame.x,
-        frame.y,
-        SPRITE_WIDTH,
-        SPRITE_HEIGHT,
-        0,
-        0,
-        SPRITE_WIDTH,
-        SPRITE_HEIGHT
-    );
-    frameIndex += 1;
-}
-
-image.onload = function() {
-    setInterval(animate, 250);
-};
+    //reset the position to 256px, once position exceeds 1536px
+    
+  }, interval); //end of setInterval
+} //end of animateScript()
